@@ -23,9 +23,12 @@ db.sequelize.sync().then(() => {
 });
 
 // Iniciar el servidor
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-});
+db.sequelize.sync({ alter: true })  // O { force: true } para desarrollo
+  .then(() => {
+    console.log('Base de datos sincronizada');
+    // Iniciar el servidor una vez sincronizada la BD
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+  })
+  .catch(err => console.error('Error al sincronizar la base de datos:', err));
 
-//Databse Created Successfully
