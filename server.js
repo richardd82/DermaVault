@@ -23,7 +23,7 @@ db.sequelize.sync().then(() => {
 });
 
 // Iniciar el servidor
-db.sequelize.sync({ alter: true })  // O { force: true } para desarrollo
+db.sequelize.sync({ alter: false })  // O { force: true } para desarrollo
   .then(() => {
     console.log('Base de datos sincronizada');
     // Iniciar el servidor una vez sincronizada la BD
