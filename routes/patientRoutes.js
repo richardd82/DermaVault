@@ -56,4 +56,19 @@ router.post("/patientsArray", async (req, res) => {
     res.status(500).json({ message: "Error al crear el paciente" });
   }
 });
+//Put /api/patient/:id - Actualizar un paciente
+router.put("/patient/:id", async (req, res) => {
+  try {
+    // console.log(req.params, "<*******************");
+    const patient = await Patient.findByPk(req.params.id);
+    if (!patient) {
+      return res.status(404).json({ message: "Paciente no encontrado" });
+    }
+    await patient.update(req.body);
+    res.json(patient);
+  } catch (error) {
+    console.error("Error al actualizar el paciente:", error);
+    res.status(500).json({ message: "Error al actualizar el paciente" });
+  }
+});
 module.exports = router;

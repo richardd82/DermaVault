@@ -18,7 +18,7 @@ fs
     return (
       file.indexOf('.') !== 0 &&
       file !== basename &&
-      file !== 'db.js' && // Excluir db.js
+      file !== 'db.js' && 
       file.slice(-3) === '.js' &&
       file.indexOf('.test.js') === -1
     );
@@ -37,4 +37,4 @@ Object.keys(db).forEach(modelName => {
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
-module.exports = db;
+module.exports = db
