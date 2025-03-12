@@ -20,6 +20,9 @@ importers:
       express:
         specifier: ^4.21.2
         version: 4.21.2
+      moment:
+        specifier: ^2.30.1
+        version: 2.30.1
       morgan:
         specifier: ^1.10.0
         version: 1.10.0
