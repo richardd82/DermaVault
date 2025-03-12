@@ -4,14 +4,16 @@ const cors = require('cors');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const db = require('./models'); // Cargar modelos
+const routes = require('./routes');
 
 const app = express();
 
 // Middlewares
-app.use(cors());
+app.use(cors("*"));
 app.use(morgan('dev'));
 app.use(bodyParser.json());
-
+app.use(express.json({ limit: '10mb' }));
+app.use('/api', routes);
 // Ruta de prueba
 app.get('/', (req, res) => {
     res.send('DermaVault API Running 🚀');
