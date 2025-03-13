@@ -25,7 +25,7 @@ db.sequelize.sync().then(() => {
 });
 
 // Iniciar el servidor
-db.sequelize.sync({ alter: false })  // Si alter es true, se sincroniza la BD y se crean las tablas si no existen
+db.sequelize.sync({ alter: true })  // Si alter es true, se sincroniza la BD y se crean las tablas si no existen
   .then(() => db.sequelize.sync({ force: false })) // Si force es true, se sincroniza la BD y se eliminan las tablas si existen
   .then(() => {
     console.log('Base de datos sincronizada');
