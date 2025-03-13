@@ -25,6 +25,10 @@ const Patient = sequelize.define(
     email: { type: DataTypes.STRING(150), validate: { isEmail: true } },
     referido_por: { type: DataTypes.STRING(150) },
     direccion: { type: DataTypes.STRING(255) },
+    created_by: { 
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: true // O false si quieres forzar que siempre exista el usuario creador
+    }
   },
   {
     tableName: "patients",
@@ -41,6 +45,11 @@ Patient.associate = (models) => {
   Patient.hasOne(require("./AdministrativeData"), {
     foreignKey: "patient_id",
     onDelete: "CASCADE",
+  });
+  Patient.belongsTo(models.User, { 
+    foreignKey: 'created_by', 
+    as: 'creator',
+    onDelete: 'SET NULL'
   });
 };
 

@@ -3,9 +3,10 @@ const express = require("express");
 const router = express.Router();
 const { Patient } = require("../models"); // Asegúrate que models/index.js exporte Patient
 const moment = require("moment");
+const auth = require('../middleware/auth');
 
 // GET /api/patients - Obtener todos los pacientes
-router.get("/patients", async (req, res) => {
+router.get("/patients", auth, async (req, res) => {
   try {
     const patients = await Patient.findAll();
     res.json(patients);
@@ -16,7 +17,7 @@ router.get("/patients", async (req, res) => {
 });
 
 // GET /api/patient/:id - Obtener un paciente por ID
-router.get("/patient/:id", async (req, res) => {
+router.get("/patient/:id", auth, async (req, res) => {
   try {
     const patient = await Patient.findByPk(req.params.id);
     if (!patient) {
@@ -29,7 +30,7 @@ router.get("/patient/:id", async (req, res) => {
   }
 });
 // POST /api/patient - Crear un paciente
-router.post("/patient", async (req, res) => {
+router.post("/patient", auth, async (req, res) => {
   try {
     const patient = await Patient.create(req.body);
     res.status(201).json(patient);
@@ -40,7 +41,7 @@ router.post("/patient", async (req, res) => {
 });
 
 //Post /api/patientsArray - Crear un array de pacientes
-router.post("/patientsArray", async (req, res) => {
+router.post("/patientsArray", auth, async (req, res) => {
   try {
     const formattedPatients = req.body.map((patient) => ({
       ...patient,
@@ -57,7 +58,7 @@ router.post("/patientsArray", async (req, res) => {
   }
 });
 //Put /api/patient/:id - Actualizar un paciente
-router.put("/patient/:id", async (req, res) => {
+router.put("/patient/:id", auth, async (req, res) => {
   try {
     // console.log(req.params, "<*******************");
     const patient = await Patient.findByPk(req.params.id);
