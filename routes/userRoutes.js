@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const { User } = require('../models');
 const auth = require('../middleware/auth'); // Middleware para validar JWT
-const bcrypt = require('bcryptjs');
+const bcryptjs = require('bcryptjs');
 const { Op } = require('sequelize');
 
 // GET /api/users - Obtener todos los usuarios
@@ -65,7 +65,7 @@ router.post('/', auth, async (req, res) => {
       first_name,
       last_name,
       is_active: is_active ?? true,
-      last_login
+      last_login: last_login ?? null
     });
 
     // Excluir el campo password del response
@@ -94,8 +94,8 @@ router.put('/:id', auth, async (req, res) => {
 
     // Para actualizar contraseña con hashing
     if (password) {
-      const salt = await bcrypt.genSalt(10);
-      user.password = await bcrypt.hash(password, salt);
+      const salt = await bcryptjs.genSalt(10);
+      user.password = await bcryptjs.hash(password, salt);
     }
 
     await user.save();
