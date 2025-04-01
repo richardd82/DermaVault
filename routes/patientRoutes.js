@@ -16,7 +16,7 @@ router.get("/patients", auth, async (req, res) => {
   }
 });
 
-// GET /api/patient/:id - Obtener un paciente por ID
+// GET /api/patients/:id - Obtener un paciente por ID
 router.get("/patient/:id", auth, async (req, res) => {
   try {
     const patient = await Patient.findByPk(req.params.id);
@@ -29,7 +29,7 @@ router.get("/patient/:id", auth, async (req, res) => {
     res.status(500).json({ message: "Error al obtener el paciente" });
   }
 });
-// POST /api/patient - Crear un paciente
+// POST /api/patients/ - Crear un paciente
 router.post("/patient", auth, async (req, res) => {
   try {
     const patient = await Patient.create(req.body);
@@ -40,7 +40,7 @@ router.post("/patient", auth, async (req, res) => {
   }
 });
 
-//Post /api/patientsArray - Crear un array de pacientes
+//Post /api/patients/patientsArray - Crear un array de pacientes
 router.post("/patientsArray", auth, async (req, res) => {
   try {
     const formattedPatients = req.body.map((patient) => ({
@@ -57,7 +57,7 @@ router.post("/patientsArray", auth, async (req, res) => {
     res.status(500).json({ message: "Error al crear el paciente" });
   }
 });
-//Put /api/patient/:id - Actualizar un paciente
+//Put /api/patients/patient/:id - Actualizar un paciente
 router.put("/patient/:id", auth, async (req, res) => {
   try {
     // console.log(req.params, "<*******************");
