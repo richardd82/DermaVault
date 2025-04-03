@@ -4,6 +4,7 @@ const router = express.Router();
 const { Patient } = require("../models"); // Asegúrate que models/index.js exporte Patient
 const moment = require("moment");
 const auth = require('../middleware/auth');
+const { Op } = require("sequelize");
 
 // GET /api/patients - Obtener todos los pacientes
 router.get("/patients", auth, async (req, res) => {
@@ -72,4 +73,25 @@ router.put("/patient/:id", auth, async (req, res) => {
     res.status(500).json({ message: "Error al actualizar el paciente" });
   }
 });
+
+router.get('/search', auth, async (req, res) => {
+  const { q } = req.query;
+
+  const results = await Patient.findAll({
+    where: {
+      [Op.or]: [
+        { nombre: { [Op.like]: `%${q}%` } },
+        { apellido: { [Op.like]: `%${q}%` } },
+        { cedula: { [Op.like]: `%${q}%` } },
+        { email: { [Op.like]: `%${q}%` } }
+      ]
+    },
+    // limit: 10
+  });
+  
+
+  res.json(results);
+});
+
+
 module.exports = router;
