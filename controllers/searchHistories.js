@@ -22,6 +22,7 @@ module.exports = async (req, res) => {
         },
         {
           model: ClinicalData,
+          as: "ClinicalData",
           where: {
             padecimiento_actual: { [Op.like]: `%${q}%` }
           },

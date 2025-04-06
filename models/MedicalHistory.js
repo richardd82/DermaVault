@@ -34,6 +34,7 @@ MedicalHistory.associate = (models) => {
 
   MedicalHistory.hasOne(models.ClinicalData, {
     foreignKey: "medical_history_id",
+    as: "ClinicalData",
     onDelete: "CASCADE"
   });
 

@@ -7,7 +7,9 @@ const deleteHistory = require("../controllers/deleteHistory");
 const getByCedula = require("../controllers/getByCedula");
 const searchHistories = require("../controllers/searchHistories");
 const historiesArray = require("../controllers/createArrayHistories");
+const getAllHistories = require("../controllers/getAllHistories");
 
+router.get("/", getAllHistories);
 router.post("/create", createFullHistory);
 router.get("/cedula/:cedula", getByCedula);
 router.put("/:id", updateFullHistory);

@@ -25,13 +25,23 @@ db.sequelize.sync().then(() => {
 });
 
 // Iniciar el servidor
-db.sequelize.sync({ alter: true })  // Si alter es true, se sincroniza la BD y se crean las tablas si no existen
-  .then(() => db.sequelize.sync({ force: false })) // Si force es true, se sincroniza la BD y se eliminan las tablas si existen
+const isDev = process.env.NODE_ENV !== 'production';
+
+db.sequelize.sync({ alter: isDev }) // alter solo en desarrollo
   .then(() => {
     console.log('Base de datos sincronizada');
-    // Iniciar el servidor una vez sincronizada la BD
     const PORT = process.env.PORT || 3000;
     app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
   })
   .catch(err => console.error('Error al sincronizar la base de datos:', err));
+
+// db.sequelize.sync({ alter: true })  // Si alter es true, se sincroniza la BD y se crean las tablas si no existen
+//   .then(() => db.sequelize.sync({ force: false })) // Si force es true, se sincroniza la BD y se eliminan las tablas si existen
+//   .then(() => {
+//     console.log('Base de datos sincronizada');
+//     // Iniciar el servidor una vez sincronizada la BD
+//     const PORT = process.env.PORT || 3000;
+//     app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+//   })
+//   .catch(err => console.error('Error al sincronizar la base de datos:', err));
 
