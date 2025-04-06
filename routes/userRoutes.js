@@ -7,7 +7,7 @@ const bcryptjs = require('bcryptjs');
 const { Op } = require('sequelize');
 
 // GET /api/users - Obtener todos los usuarios
-router.get('/',  async (req, res) => {
+router.get('/',  auth, async (req, res) => {
   try {
     // Podrías filtrar ciertos campos (por ejemplo, no mostrar password)
     const users = await User.findAll({
