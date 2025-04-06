@@ -1,4 +1,7 @@
 const { Op } = require("sequelize");
+const MedicalHistory = require("../models/MedicalHistory");
+const Patient = require("../models/Patient");
+const ClinicalData = require("../models/ClinicalData");
 
 module.exports = async (req, res) => {
   const { q } = req.query;

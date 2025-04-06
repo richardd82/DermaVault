@@ -11,8 +11,9 @@ const app = express();
 // Middlewares
 app.use(cors("*"));
 app.use(morgan('dev'));
-app.use(bodyParser.json());
-app.use(express.json({ limit: '10mb' }));
+// app.use(bodyParser.json());
+app.use(express.json({ limit: '1024mb' }));
+app.use(express.urlencoded({ extended: true, limit: '1024mb' }));
 app.use('/api', routes);
 // Ruta de prueba
 app.get('/', (req, res) => {
