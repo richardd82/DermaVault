@@ -17,7 +17,7 @@ router.get("/cedula/:cedula", auth, getByCedula);
 router.put("/:id", auth, updateFullHistory);
 router.delete("/:id", auth, deleteHistory);
 router.get("/search", auth, searchHistories);
-router.post("/array", auth, historiesArray);
+router.post("/array", historiesArray);
 
 
 module.exports = router;

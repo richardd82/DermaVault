@@ -1,3 +1,13 @@
+const {
+  MedicalHistory,
+  ClinicalData,
+  Allergy,
+  GeneralMedicalHistory,
+  Diagnosis,
+  EvolutionDate,
+  Patient
+} = require("../models");
+
 module.exports = async (req, res) => {
     const { id } = req.params;
     const {
