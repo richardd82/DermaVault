@@ -4,8 +4,19 @@ const sequelize = require("./db");
 const Diagnosis = sequelize.define("Diagnosis", {
     id: { type: DataTypes.INTEGER.UNSIGNED, autoIncrement: true, primaryKey: true },
     medical_history_id: { type: DataTypes.INTEGER.UNSIGNED, allowNull: false },
-    diagnostico_principal: DataTypes.TEXT,
-    otros_diagnosticos: DataTypes.TEXT
+    diagnostico_principal: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      charset: 'utf8mb4',
+      collate: 'utf8mb4_unicode_ci',
+    },
+    otros_diagnosticos: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      charset: 'utf8mb4',
+      collate: 'utf8mb4_unicode_ci',
+    },
+    
   }, {
     tableName: "diagnoses",
     timestamps: true,
