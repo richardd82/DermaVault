@@ -12,8 +12,8 @@ const app = express();
 app.use(cors("*"));
 app.use(morgan('dev'));
 // app.use(bodyParser.json());
-app.use(express.json({ limit: '1024mb' }));
-app.use(express.urlencoded({ extended: true, limit: '1024mb' }));
+app.use(express.json({ limit: '4096mb' }));
+app.use(express.urlencoded({ extended: true, limit: '4096mb' }));
 app.use('/api', routes);
 // Ruta de prueba
 app.get('/', (req, res) => {
@@ -28,7 +28,7 @@ db.sequelize.sync().then(() => {
 // Iniciar el servidor
 const isDev = process.env.NODE_ENV !== 'production';
 
-db.sequelize.sync({ alter: isDev }) // alter solo en desarrollo
+db.sequelize.sync({ alter: false }) // alter solo en desarrollo
   .then(() => {
     console.log('Base de datos sincronizada');
     const PORT = process.env.PORT || 3000;
