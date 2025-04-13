@@ -3,19 +3,30 @@ const express = require("express");
 const router = express.Router();
 const { Patient } = require("../models"); // Asegúrate que models/index.js exporte Patient
 const moment = require("moment");
-const auth = require('../middleware/auth');
-const { Op } = require("sequelize");
+const auth = require("../middleware/auth");
+const { Op, Sequelize  } = require("sequelize");
 
 // GET /api/patients - Obtener todos los pacientes
 router.get("/patients", auth, async (req, res) => {
   try {
-    const limit = parseInt(req.query.limit) || 100;
-    const offset = parseInt(req.query.offset) || 0;
+    const limit = req.query.limit ? parseInt(req.query.limit) : null;
+    const offset = req.query.offset ? parseInt(req.query.offset) : null;
 
+    if (limit === null || offset === null || isNaN(limit) || isNaN(offset)) {
+      return res.status(400).json({ message: "Parámetros 'limit' y 'offset' requeridos y válidos" });
+    }
+
+    const MAX_LIMIT = 1000;
+    if (limit > MAX_LIMIT) {
+      return res.status(400).json({ message: `Límite máximo permitido: ${MAX_LIMIT}` });
+    }
+    
     const { count, rows } = await Patient.findAndCountAll({
       limit,
       offset,
-      order: [["apellido", "ASC"]],
+      order: [
+        [Sequelize.literal("CAST(SUBSTRING_INDEX(cedula, '-', -1) AS UNSIGNED)"), "DESC"]
+      ],
     });
 
     res.json({
@@ -119,7 +130,7 @@ router.put("/patient/:id", auth, async (req, res) => {
   }
 });
 
-router.get('/search', auth, async (req, res) => {
+router.get("/search", auth, async (req, res) => {
   const { q } = req.query;
 
   const results = await Patient.findAll({
@@ -128,15 +139,13 @@ router.get('/search', auth, async (req, res) => {
         { nombre: { [Op.like]: `%${q}%` } },
         { apellido: { [Op.like]: `%${q}%` } },
         { cedula: { [Op.like]: `%${q}%` } },
-        { email: { [Op.like]: `%${q}%` } }
-      ]
+        { email: { [Op.like]: `%${q}%` } },
+      ],
     },
     // limit: 10
   });
-  
 
   res.json(results);
 });
-
 
 module.exports = router;
