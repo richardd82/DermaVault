@@ -10,6 +10,7 @@ const getByCedula = require("../controllers/getByCedula");
 const searchHistories = require("../controllers/searchHistories");
 const historiesArray = require("../controllers/createArrayHistories");
 const getAllHistories = require("../controllers/getAllHistories");
+const uploadMedHistoriesArrayChunk = require("../controllers/uploadMedHistoriesArrayChunk");
 
 router.get("/", auth, getAllHistories);
 router.post("/create", auth, createFullHistory);
@@ -18,6 +19,8 @@ router.put("/:id", auth, updateFullHistory);
 router.delete("/:id", auth, deleteHistory);
 router.get("/search", auth, searchHistories);
 router.post("/array", historiesArray);
+router.post("/uploadArray", uploadMedHistoriesArrayChunk);
+
 
 
 module.exports = router;
