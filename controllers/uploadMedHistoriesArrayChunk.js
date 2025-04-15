@@ -9,6 +9,7 @@ const {
   } = require("../models");
   
   function chunkArray(array, size) {
+    console.log("Ejemplo de historia recibida:", JSON.stringify(historiesArray[0], null, 2));
     return array.reduce((chunks, item, index) => {
       const chunkIndex = Math.floor(index / size);
       if (!chunks[chunkIndex]) chunks[chunkIndex] = [];

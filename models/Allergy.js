@@ -6,6 +6,7 @@ const Allergy = sequelize.define("Allergy", {
   medical_history_id: { type: DataTypes.INTEGER.UNSIGNED, allowNull: false },
   analgesicos: DataTypes.STRING,
   anestesicos: DataTypes.STRING,
+  antibioticos: DataTypes.STRING,
   yodo: DataTypes.STRING,
   adhesivos: DataTypes.STRING,
   material_sutura: DataTypes.STRING,

@@ -1,12 +1,14 @@
+const db = require("../models");
 const {
-    MedicalHistory,
-    Patient,
-    ClinicalData,
-    Allergy,
-    GeneralMedicalHistory,
-    Diagnosis,
-    EvolutionDate
-  } = require("../models");
+  MedicalHistory,
+  Patient,
+  ClinicalData,
+  Allergy,
+  GeneralMedicalHistory,
+  Diagnosis,
+  EvolutionDate
+} = db;
+
   
   module.exports = async (req, res) => {
     try {
@@ -36,7 +38,7 @@ const {
         ],
         order: [["updatedAt", "DESC"]] // las más recientes primero
       });
-  
+      // console.log("Primera historia clínica:", histories[0]?.toJSON());
       return res.status(200).json({
         success: true,
         data: histories
