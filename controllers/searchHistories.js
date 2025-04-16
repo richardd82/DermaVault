@@ -91,7 +91,7 @@ module.exports = async (req, res) => {
           required: false,
         },
       ],
-      limit: 50,
+      
     });
 
     return res.json({ success: true, data: histories });

@@ -9,12 +9,17 @@ const {
   Sequelize
 } = require("../models");
 
+const { Op, fn, col, where } = Sequelize;
+
 module.exports = async (req, res) => {
   try {
     const limit = req.query.limit ? parseInt(req.query.limit) : null;
     const offset = req.query.offset ? parseInt(req.query.offset) : null;
+    const q = req.query.q
+      ?.toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, ""); // quitar acentos
 
-    // Validación de parámetros
     if (limit === null || offset === null || isNaN(limit) || isNaN(offset)) {
       return res.status(400).json({
         success: false,
@@ -30,19 +35,59 @@ module.exports = async (req, res) => {
       });
     }
 
-    // Obtener datos con asociaciones
+    const patientSearch = q
+      ? {
+          [Op.or]: [
+            where(
+              fn(
+                "LOWER",
+                fn("REPLACE", fn("REPLACE", fn("REPLACE", col("Patient.nombre"), "á", "a"), "é", "e"), "í", "i")
+              ),
+              { [Op.like]: `%${q}%` }
+            ),
+            where(
+              fn(
+                "LOWER",
+                fn("REPLACE", fn("REPLACE", fn("REPLACE", col("Patient.apellido"), "á", "a"), "é", "e"), "í", "i")
+              ),
+              { [Op.like]: `%${q}%` }
+            ),
+            where(fn("LOWER", col("Patient.cedula")), { [Op.like]: `%${q}%` })
+          ]
+        }
+      : undefined;
+
+    const diagnosisSearch = q
+      ? {
+          [Op.or]: [
+            where(
+              fn(
+                "LOWER",
+                fn("REPLACE", fn("REPLACE", fn("REPLACE", col("Diagnosis.diagnostico_principal"), "á", "a"), "é", "e"), "í", "i")
+              ),
+              { [Op.like]: `%${q}%` }
+            )
+          ]
+        }
+      : undefined;
+
     const { count, rows } = await MedicalHistory.findAndCountAll({
       limit,
       offset,
       include: [
         {
           model: Patient,
-          attributes: ["cedula", "nombre", "apellido", "email", "telefono_movil"]
+          attributes: ["cedula", "nombre", "apellido", "email", "telefono_movil"],
+          where: patientSearch
         },
         { model: ClinicalData, as: "ClinicalData" },
         { model: Allergy },
         { model: GeneralMedicalHistory },
-        { model: Diagnosis },
+        {
+          model: Diagnosis,
+          where: diagnosisSearch,
+          required: false
+        },
         {
           model: EvolutionDate,
           order: [["date", "DESC"]]
@@ -57,7 +102,6 @@ module.exports = async (req, res) => {
       total: count,
       hasMore: offset + limit < count
     });
-
   } catch (err) {
     console.error("Error al obtener historias clínicas:", err);
     return res.status(500).json({
@@ -67,7 +111,6 @@ module.exports = async (req, res) => {
   }
 };
 
-// const db = require("../models");
 // const {
 //   MedicalHistory,
 //   Patient,
@@ -75,50 +118,64 @@ module.exports = async (req, res) => {
 //   Allergy,
 //   GeneralMedicalHistory,
 //   Diagnosis,
-//   EvolutionDate
-// } = db;
+//   EvolutionDate,
+//   Sequelize
+// } = require("../models");
 
-  
-//   module.exports = async (req, res) => {
-//     try {
-//       const histories = await MedicalHistory.findAll({
-//         include: [
-//           {
-//             model: Patient,
-//             attributes: ["cedula", "nombre", "apellido", "email", "telefono_movil"]
-//           },
-//           {
-//             model: ClinicalData,
-//             as: "ClinicalData"
-//           },
-//           {
-//             model: Allergy
-//           },
-//           {
-//             model: GeneralMedicalHistory
-//           },
-//           {
-//             model: Diagnosis
-//           },
-//           {
-//             model: EvolutionDate,
-//             order: [["date", "DESC"]] // opcional: orden cronológico
-//           }
-//         ],
-//         order: [["updatedAt", "DESC"]] // las más recientes primero
-//       });
-//       // console.log("Primera historia clínica:", histories[0]?.toJSON());
-//       return res.status(200).json({
-//         success: true,
-//         data: histories
-//       });
-  
-//     } catch (err) {
-//       console.error("Error al obtener historias clínicas:", err);
-//       return res.status(500).json({
+// module.exports = async (req, res) => {
+//   try {
+//     const limit = req.query.limit ? parseInt(req.query.limit) : null;
+//     const offset = req.query.offset ? parseInt(req.query.offset) : null;
+
+//     // Validación de parámetros
+//     if (limit === null || offset === null || isNaN(limit) || isNaN(offset)) {
+//       return res.status(400).json({
 //         success: false,
-//         message: "Error al obtener las historias clínicas"
+//         message: "Parámetros 'limit' y 'offset' requeridos y válidos"
 //       });
 //     }
-//   };
-  
+
+//     const MAX_LIMIT = 1000;
+//     if (limit > MAX_LIMIT) {
+//       return res.status(400).json({
+//         success: false,
+//         message: `Límite máximo permitido: ${MAX_LIMIT}`
+//       });
+//     }
+
+//     // Obtener datos con asociaciones
+//     const { count, rows } = await MedicalHistory.findAndCountAll({
+//       limit,
+//       offset,
+//       include: [
+//         {
+//           model: Patient,
+//           attributes: ["cedula", "nombre", "apellido", "email", "telefono_movil"]
+//         },
+//         { model: ClinicalData, as: "ClinicalData" },
+//         { model: Allergy },
+//         { model: GeneralMedicalHistory },
+//         { model: Diagnosis },
+//         {
+//           model: EvolutionDate,
+//           order: [["date", "DESC"]]
+//         }
+//       ],
+//       order: [["updatedAt", "DESC"]]
+//     });
+
+//     return res.status(200).json({
+//       success: true,
+//       data: rows,
+//       total: count,
+//       hasMore: offset + limit < count
+//     });
+
+//   } catch (err) {
+//     console.error("Error al obtener historias clínicas:", err);
+//     return res.status(500).json({
+//       success: false,
+//       message: "Error al obtener las historias clínicas"
+//     });
+//   }
+// };
