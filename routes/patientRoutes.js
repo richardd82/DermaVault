@@ -4,7 +4,7 @@ const router = express.Router();
 const { Patient } = require("../models"); // Asegúrate que models/index.js exporte Patient
 const moment = require("moment");
 const auth = require("../middleware/auth");
-const { Op, Sequelize  } = require("sequelize");
+const { Op, Sequelize } = require("sequelize");
 
 // GET /api/patients - Obtener todos los pacientes
 router.get("/patients", auth, async (req, res) => {
@@ -13,19 +13,30 @@ router.get("/patients", auth, async (req, res) => {
     const offset = req.query.offset ? parseInt(req.query.offset) : null;
 
     if (limit === null || offset === null || isNaN(limit) || isNaN(offset)) {
-      return res.status(400).json({ message: "Parámetros 'limit' y 'offset' requeridos y válidos" });
+      return res
+        .status(400)
+        .json({
+          message: "Parámetros 'limit' y 'offset' requeridos y válidos",
+        });
     }
 
     const MAX_LIMIT = 1000;
     if (limit > MAX_LIMIT) {
-      return res.status(400).json({ message: `Límite máximo permitido: ${MAX_LIMIT}` });
+      return res
+        .status(400)
+        .json({ message: `Límite máximo permitido: ${MAX_LIMIT}` });
     }
-    
+
     const { count, rows } = await Patient.findAndCountAll({
       limit,
       offset,
       order: [
-        [Sequelize.literal("CAST(SUBSTRING_INDEX(cedula, '-', -1) AS UNSIGNED)"), "DESC"]
+        [
+          Sequelize.literal(
+            "CAST(SUBSTRING_INDEX(cedula, '-', -1) AS UNSIGNED)"
+          ),
+          "DESC",
+        ],
       ],
     });
 
@@ -129,34 +140,37 @@ router.put("/patient/:id", auth, async (req, res) => {
     res.status(500).json({ message: "Error al actualizar el paciente" });
   }
 });
+
 router.get("/search", async (req, res) => {
   try {
     const q = req.query.q?.trim();
+    const isNumeric = /^\d+$/.test(q);
 
-    if (!q || q.length < 2) {
+    if ((isNumeric && q.length < 1) || (!isNumeric && q.length < 3)) {
       return res.status(400).json({ message: "Consulta muy corta" });
     }
 
-    const isCedula = /^m-\d+$/i.test(q) || /^\d+$/i.test(q);
+    let whereClause;
 
-    const whereClause = isCedula
-      ? {
-          cedula: {
-            [Op.like]: `%${q}%`
-          }
-        }
-      : {
-          [Op.or]: [
-            { nombre: { [Op.like]: `%${q}%` } },
-            { apellido: { [Op.like]: `%${q}%` } },
-            { cedula: { [Op.like]: `%${q}%` } },
-            { email: { [Op.like]: `%${q}%` } }
-          ]
-        };
-
+    if (isNumeric && q.length < 3) {
+      whereClause = {
+        cedula: {
+          [Op.eq]: `M-${q}`,
+        },
+      };
+    } else {
+      whereClause = {
+        [Op.or]: [
+          { nombre: { [Op.like]: `%${q}%` } },
+          { apellido: { [Op.like]: `%${q}%` } },
+          { cedula: { [Op.like]: `%${q}%` } },
+          { email: { [Op.like]: `%${q}%` } },
+        ],
+      };
+    }
     const results = await Patient.findAll({
       where: whereClause,
-      order: [["updatedAt", "DESC"]]
+      order: [["updatedAt", "DESC"]],
     });
 
     res.json(results);
@@ -165,23 +179,5 @@ router.get("/search", async (req, res) => {
     res.status(500).json({ message: "Error interno del servidor" });
   }
 });
-
-// router.get("/search", auth, async (req, res) => {
-//   const { q } = req.query;
-
-//   const results = await Patient.findAll({
-//     where: {
-//       [Op.or]: [
-//         { nombre: { [Op.like]: `%${q}%` } },
-//         { apellido: { [Op.like]: `%${q}%` } },
-//         { cedula: { [Op.like]: `%${q}%` } },
-//         { email: { [Op.like]: `%${q}%` } },
-//       ],
-//     },
-//     // limit: 10
-//   });
-
-//   res.json(results);
-// });
 
 module.exports = router;
