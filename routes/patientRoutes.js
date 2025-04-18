@@ -165,7 +165,15 @@ router.get("/search", async (req, res) => {
           { apellido: { [Op.like]: `%${q}%` } },
           { cedula: { [Op.like]: `%${q}%` } },
           { email: { [Op.like]: `%${q}%` } },
-        ],
+          Sequelize.where(
+            Sequelize.fn("LOWER", Sequelize.fn("CONCAT", Sequelize.col("nombre"), " ", Sequelize.col("apellido"))),
+            { [Op.like]: `%${q.toLowerCase()}%` }
+          ),
+          Sequelize.where(
+            Sequelize.fn("LOWER", Sequelize.fn("CONCAT", Sequelize.col("apellido"), " ", Sequelize.col("nombre"))),
+            { [Op.like]: `%${q.toLowerCase()}%` }
+          )
+        ]
       };
     }
     const results = await Patient.findAll({
