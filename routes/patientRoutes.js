@@ -129,23 +129,59 @@ router.put("/patient/:id", auth, async (req, res) => {
     res.status(500).json({ message: "Error al actualizar el paciente" });
   }
 });
+router.get("/search", async (req, res) => {
+  try {
+    const q = req.query.q?.trim();
 
-router.get("/search", auth, async (req, res) => {
-  const { q } = req.query;
+    if (!q || q.length < 2) {
+      return res.status(400).json({ message: "Consulta muy corta" });
+    }
 
-  const results = await Patient.findAll({
-    where: {
-      [Op.or]: [
-        { nombre: { [Op.like]: `%${q}%` } },
-        { apellido: { [Op.like]: `%${q}%` } },
-        { cedula: { [Op.like]: `%${q}%` } },
-        { email: { [Op.like]: `%${q}%` } },
-      ],
-    },
-    // limit: 10
-  });
+    const isCedula = /^m-\d+$/i.test(q) || /^\d+$/i.test(q);
 
-  res.json(results);
+    const whereClause = isCedula
+      ? {
+          cedula: {
+            [Op.like]: `%${q}%`
+          }
+        }
+      : {
+          [Op.or]: [
+            { nombre: { [Op.like]: `%${q}%` } },
+            { apellido: { [Op.like]: `%${q}%` } },
+            { cedula: { [Op.like]: `%${q}%` } },
+            { email: { [Op.like]: `%${q}%` } }
+          ]
+        };
+
+    const results = await Patient.findAll({
+      where: whereClause,
+      order: [["updatedAt", "DESC"]]
+    });
+
+    res.json(results);
+  } catch (err) {
+    console.error("Error en búsqueda de pacientes:", err);
+    res.status(500).json({ message: "Error interno del servidor" });
+  }
 });
+
+// router.get("/search", auth, async (req, res) => {
+//   const { q } = req.query;
+
+//   const results = await Patient.findAll({
+//     where: {
+//       [Op.or]: [
+//         { nombre: { [Op.like]: `%${q}%` } },
+//         { apellido: { [Op.like]: `%${q}%` } },
+//         { cedula: { [Op.like]: `%${q}%` } },
+//         { email: { [Op.like]: `%${q}%` } },
+//       ],
+//     },
+//     // limit: 10
+//   });
+
+//   res.json(results);
+// });
 
 module.exports = router;
