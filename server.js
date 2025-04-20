@@ -20,7 +20,12 @@ const {
 const routes = require('./routes');
 
 const app = express();
-app.use(cors("*"));
+app.use(cors({
+  origin: ('http://localhost:5173', 'https://derma.richadd82.dev/'), // o mejor el dominio del frontend: 'http://localhost:5173' o 'https://tudominio.com'
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true
+}));
 app.use(morgan('dev'));
 app.use(express.json({ limit: '4096mb' }));
 app.use(express.urlencoded({ extended: true, limit: '4096mb' }));
@@ -49,7 +54,7 @@ async function safeSync() {
     await GeneralMedicalHistory.sync();
     await AdministrativeData.sync();
 
-    await sequelize.sync({ alter: true }); // actualiza sin borrar datos
+    await sequelize.sync({ alter: false }); // actualiza sin borrar datos
     console.log("🛠️ Base de datos sincronizada con éxito");
 
     app.listen(PORT, () => {
