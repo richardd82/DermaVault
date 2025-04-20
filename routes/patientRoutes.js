@@ -125,6 +125,11 @@ router.post("/patientsArray", auth, async (req, res) => {
   }
 });
 
+router.get("/count", async (_, res) => {
+  const count = await Patient.count();
+  res.json({ count });
+});
+
 //Put /api/patients/patient/:id - Actualizar un paciente
 router.put("/patient/:id", auth, async (req, res) => {
   try {
