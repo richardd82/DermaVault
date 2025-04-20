@@ -13,6 +13,7 @@ const getAllHistories = require("../controllers/getAllHistories");
 const uploadMedHistoriesArrayChunk = require("../controllers/uploadMedHistoriesArrayChunk");
 const getAllHistoryCedulas = require("../controllers/getAllHistoryCedula");
 const searchExactHistories = require("../controllers/searchExactHistories");
+const uploadEvolutionsFromJson = require("../controllers/uploadEvolutionsFromJson");
 
 router.get("/", auth, getAllHistories);
 router.post("/create", auth, createFullHistory);
@@ -24,6 +25,7 @@ router.post("/array", historiesArray);
 router.post("/uploadArray", auth, uploadMedHistoriesArrayChunk);
 router.get("/cedulas", auth, getAllHistoryCedulas);
 router.get("/search-exact", auth, searchExactHistories);
+router.post("/uploadEvolutions", uploadEvolutionsFromJson);
 
 
 
