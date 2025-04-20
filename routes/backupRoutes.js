@@ -6,6 +6,8 @@ const router = express.Router();
 const multer = require("multer");
 const { spawn } = require("child_process");
 const fs = require("fs");
+const { sequelize } = require("../models");
+
 
 router.post("/generate", auth, async (req, res) => {
   const user = process.env.MYSQLUSER;
@@ -98,7 +100,7 @@ router.post("/restore", auth, upload.single("file"), async (req, res) => {
   console.log("📦 Tamaño:", req.file?.size);
   console.log("🗂️ Path:", req.file?.path);
 
-  if (process.env.NODE_ENV === "production") {
+  // if (process.env.NODE_ENV === "production") {
     try {
       const sql = fs.readFileSync(req.file.path, "utf8");
       await sequelize.query(sql, { raw: true, multipleStatements: true });
@@ -109,50 +111,52 @@ router.post("/restore", auth, upload.single("file"), async (req, res) => {
       console.error("❌ Error al restaurar:", err);
       return res.status(500).json({ success: false, message: "Error al restaurar respaldo" });
     }  
-  }   else{
-  if (!req.file) {
-    console.log("⚠️ No se recibió archivo");
-    return res
-      .status(400)
-      .json({ success: false, message: "No se recibió ningún archivo." });
-  }
+  // }   else{
 
-  console.log("📄 Archivo recibido:", req.file);
 
-  const filePath = path.join(__dirname, "../backups", req.file?.filename);
+  // if (!req.file) {
+  //   console.log("⚠️ No se recibió archivo");
+  //   return res
+  //     .status(400)
+  //     .json({ success: false, message: "No se recibió ningún archivo." });
+  // }
 
-  if (!req.file) {
-    return res
-      .status(400)
-      .json({ success: false, message: "No se recibió el archivo" });
-  }
+  // console.log("📄 Archivo recibido:", req.file);
 
-  const { exec } = require("child_process");
+  // const filePath = path.join(__dirname, "../backups", req.file?.filename);
 
-  const user = process.env.MYSQLUSER;
-  const password = process.env.MYSQL_ROOT_PASSWORD;
-  const database = process.env.MYSQL_DATABASE;
-  const dumpFile = req.file.path.replace(/\\/g, "/");
+  // if (!req.file) {
+  //   return res
+  //     .status(400)
+  //     .json({ success: false, message: "No se recibió el archivo" });
+  // }
 
-  // const cmd = `mysql -u ${user} -p${password} ${database} < "${filePath}"`;
-  const cmd = `mysql -u ${user} -p${password} ${database} --verbose < "${filePath}"`;
+  // const { exec } = require("child_process");
 
-  console.log("🔁 Restaurando desde:", dumpFile);
+  // const user = process.env.MYSQLUSER;
+  // const password = process.env.MYSQL_ROOT_PASSWORD;
+  // const database = process.env.MYSQL_DATABASE;
+  // const dumpFile = req.file.path.replace(/\\/g, "/");
 
-  exec(cmd, { maxBuffer: 1024 * 1024 * 1024 }, (err, stdout, stderr) => {
-    if (err) {
-      console.error("Error al restaurar:", err);
-      return res.status(500).json({
-        success: false,
-        message: "Error al restaurar la base de datos",
-      });
-    }
-    // ✅ Eliminar archivo temporal
-    fs.unlinkSync(req.file.path);
-    console.log("🧹 Archivo temporal eliminado:", req.file.path);
-    return res.json({ success: true, message: "Restauración completada" });
-  });
-}
+  // // const cmd = `mysql -u ${user} -p${password} ${database} < "${filePath}"`;
+  // const cmd = `mysql -u ${user} -p${password} ${database} --verbose < "${filePath}"`;
+
+  // console.log("🔁 Restaurando desde:", dumpFile);
+
+  // exec(cmd, { maxBuffer: 1024 * 1024 * 1024 }, (err, stdout, stderr) => {
+  //   if (err) {
+  //     console.error("Error al restaurar:", err);
+  //     return res.status(500).json({
+  //       success: false,
+  //       message: "Error al restaurar la base de datos",
+  //     });
+  //   }
+  //   // ✅ Eliminar archivo temporal
+  //   fs.unlinkSync(req.file.path);
+  //   console.log("🧹 Archivo temporal eliminado:", req.file.path);
+  //   return res.json({ success: true, message: "Restauración completada" });
+  // });
+// }
 });
 
 /********************************** Ruta para descargar backups ************************************/
