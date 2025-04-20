@@ -28,7 +28,7 @@ db.sequelize.sync().then(() => {
 // Iniciar el servidor
 const isDev = process.env.NODE_ENV !== 'production';
 
-db.sequelize.sync({ alter: false }) // alter solo en desarrollo
+db.sequelize.sync({ alter: false, logging:false }) // alter solo en desarrollo
   .then(() => {
     console.log('Base de datos sincronizada');
     const PORT = process.env.PORT || 3000;

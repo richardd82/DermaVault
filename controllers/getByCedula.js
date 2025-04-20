@@ -25,7 +25,7 @@ module.exports = async (req, res) => {
         { model: Allergy, as: "Allergy" },
         { model: GeneralMedicalHistory, as: "GeneralMedicalHistory" },
         { model: Diagnosis, as: "Diagnosis" },
-        { model: EvolutionDate, as: "EvolutionDates" }
+        { model: EvolutionDate, as: "EvolutionDates", order: [['date', 'DESC']],}
       ]
     });
 

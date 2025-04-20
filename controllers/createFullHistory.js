@@ -15,7 +15,7 @@ module.exports = async (req, res) => {
     allergies,
     general_history,
     diagnosis,
-    evolutions,
+    EvolutionDates ,
   } = req.body;
 
   try {
@@ -70,13 +70,18 @@ module.exports = async (req, res) => {
       });
     }
 
-    if (evolutions?.length) {
-      const evoluciones = evolutions.map((e) => ({
-        ...e,
-        medical_history_id: medicalHistory.id,
-      }));
-      await EvolutionDate.bulkCreate(evoluciones);
-    }
+    if (Array.isArray(EvolutionDates ) && EvolutionDates .length > 0) {
+      const nuevasEvoluciones = EvolutionDates
+        .filter(e => e.date && typeof e.observation === "string")
+        .map(e => ({
+          ...e,
+          medical_history_id: medicalHistory.id,
+        }));
+    
+      if (nuevasEvoluciones.length > 0) {
+        await EvolutionDate.bulkCreate(nuevasEvoluciones);
+      }
+    }  
 
     return res.status(201).json({
       success: true,

@@ -12,7 +12,7 @@ const {
 const { Op } = Sequelize;
 
 module.exports = async (req, res) => {
-  console.log(res, "<=====================");
+  // console.log(res, "<=====================");
   try {
     const limit = req.query.limit ? parseInt(req.query.limit) : null;
     const offset = req.query.offset ? parseInt(req.query.offset) : null;

@@ -4,8 +4,8 @@ const sequelize = require("./db");
 const EvolutionDate = sequelize.define("EvolutionDate", {
   id: { type: DataTypes.INTEGER.UNSIGNED, autoIncrement: true, primaryKey: true },
   medical_history_id: { type: DataTypes.INTEGER.UNSIGNED, allowNull: false },
-  date: { type: DataTypes.DATEONLY, allowNull: false },
-  observation: DataTypes.TEXT
+  date: { type: DataTypes.DATEONLY, allowNull: true },
+  observation: {type: DataTypes.TEXT, allowNull: true},
 }, {
   tableName: "evolution_dates",
   timestamps: true,
