@@ -93,11 +93,23 @@ const upload = multer({
 });
 
 /********************************* Ruta para restaurar backup ************************************/
-router.post("/restore", auth, upload.single("file"), (req, res) => {
+router.post("/restore", auth, upload.single("file"), async (req, res) => {
   console.log("✅ Nombre:", req.file?.originalname);
   console.log("📦 Tamaño:", req.file?.size);
   console.log("🗂️ Path:", req.file?.path);
 
+  if (process.env.NODE_ENV === "production") {
+    try {
+      const sql = fs.readFileSync(req.file.path, "utf8");
+      await sequelize.query(sql, { raw: true, multipleStatements: true });
+  
+      fs.unlinkSync(req.file.path);
+      return res.json({ success: true, message: "Respaldo restaurado con éxito" });
+    } catch (err) {
+      console.error("❌ Error al restaurar:", err);
+      return res.status(500).json({ success: false, message: "Error al restaurar respaldo" });
+    }  
+  }   else{
   if (!req.file) {
     console.log("⚠️ No se recibió archivo");
     return res
@@ -140,6 +152,7 @@ router.post("/restore", auth, upload.single("file"), (req, res) => {
     console.log("🧹 Archivo temporal eliminado:", req.file.path);
     return res.json({ success: true, message: "Restauración completada" });
   });
+}
 });
 
 /********************************** Ruta para descargar backups ************************************/
