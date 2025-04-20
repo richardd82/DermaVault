@@ -18,14 +18,25 @@ const {
 } = require("./models");
 
 const routes = require('./routes');
+const allowedOrigins = [
+  "http://localhost:5173", // Desarrollo local
+  "https://derma.richadd82.dev" // Tu frontend en producción
+];
 
 const app = express();
-app.use(cors({
-  origin: ['http://localhost:5173', 'https://derma.richadd82.dev/'], // o mejor el dominio del frontend: 'http://localhost:5173' o 'https://tudominio.com'
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: false
-}));
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // Permitir sin origin para herramientas como Thunder
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("CORS no permitido"));
+      }
+    },
+    credentials: false, // Si usas cookies o auth headers
+  })
+);
 app.use(morgan('dev'));
 app.use(express.json({ limit: '4096mb' }));
 app.use(express.urlencoded({ extended: true, limit: '4096mb' }));
