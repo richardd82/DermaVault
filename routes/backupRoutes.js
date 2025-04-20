@@ -8,9 +8,9 @@ const { spawn } = require("child_process");
 const fs = require("fs");
 
 router.post("/generate", auth, async (req, res) => {
-  const user = process.env.DB_USER;
-  const password = process.env.DB_PASSWORD;
-  const database = process.env.DB_NAME;
+  const user = process.env.MYSQLUSER;
+  const password = process.env.MYSQL_ROOT_PASSWORD;
+  const database = process.env.MYSQL_DATABASE;
 
   const timestamp = Date.now();
   const fileName = `backup-${timestamp}.sql`;
@@ -117,9 +117,9 @@ router.post("/restore", auth, upload.single("file"), (req, res) => {
 
   const { exec } = require("child_process");
 
-  const user = process.env.DB_USER;
-  const password = process.env.DB_PASSWORD;
-  const database = process.env.DB_NAME;
+  const user = process.env.MYSQLUSER;
+  const password = process.env.MYSQL_ROOT_PASSWORD;
+  const database = process.env.MYSQL_DATABASE;
   const dumpFile = req.file.path.replace(/\\/g, "/");
 
   // const cmd = `mysql -u ${user} -p${password} ${database} < "${filePath}"`;
