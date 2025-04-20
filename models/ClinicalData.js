@@ -8,13 +8,13 @@ const ClinicalData = sequelize.define("ClinicalData", {
   antecedentes_heredofamiliares: DataTypes.TEXT,
   antecedentes_personales: DataTypes.TEXT,
   resto_aparatos_sistemas: DataTypes.TEXT,
-  cicatrices_queloides: DataTypes.STRING,
-  tension_arterial: DataTypes.STRING,
-  sangrado_hematomas: DataTypes.STRING,
-  ciclo_menstrual: DataTypes.STRING,
-  tabaquismo: DataTypes.STRING,
-  alcoholismo: DataTypes.STRING,
-  problemas_emocionales: DataTypes.STRING
+  cicatrices_queloides: DataTypes.TEXT,
+  tension_arterial: DataTypes.TEXT,
+  sangrado_hematomas: DataTypes.TEXT,
+  ciclo_menstrual: DataTypes.TEXT,
+  tabaquismo: DataTypes.TEXT,
+  alcoholismo: DataTypes.TEXT,
+  problemas_emocionales: DataTypes.TEXT
 }, {
   tableName: "clinical_data",
   timestamps: true,
