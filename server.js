@@ -24,7 +24,7 @@ app.use(cors({
   origin: ['http://localhost:5173', 'https://derma.richadd82.dev/'], // o mejor el dominio del frontend: 'http://localhost:5173' o 'https://tudominio.com'
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true
+  credentials: false
 }));
 app.use(morgan('dev'));
 app.use(express.json({ limit: '4096mb' }));
