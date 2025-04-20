@@ -21,7 +21,7 @@ const routes = require('./routes');
 
 const app = express();
 app.use(cors({
-  origin: ('http://localhost:5173', 'https://derma.richadd82.dev/'), // o mejor el dominio del frontend: 'http://localhost:5173' o 'https://tudominio.com'
+  origin: ['http://localhost:5173', 'https://derma.richadd82.dev/'], // o mejor el dominio del frontend: 'http://localhost:5173' o 'https://tudominio.com'
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true
