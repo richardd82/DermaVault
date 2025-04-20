@@ -17,7 +17,7 @@ const MedicalHistory = sequelize.define("MedicalHistory", {
     }
   },
   cedula: {
-    type: DataTypes.STRING,
+    type: DataTypes.TEXT,
     allowNull: false
   }
 }, {

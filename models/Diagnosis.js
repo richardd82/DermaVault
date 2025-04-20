@@ -5,13 +5,13 @@ const Diagnosis = sequelize.define("Diagnosis", {
     id: { type: DataTypes.INTEGER.UNSIGNED, autoIncrement: true, primaryKey: true },
     medical_history_id: { type: DataTypes.INTEGER.UNSIGNED, allowNull: false },
     diagnostico_principal: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: true,
       charset: 'utf8mb4',
       collate: 'utf8mb4_unicode_ci',
     },
     otros_diagnosticos: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: true,
       charset: 'utf8mb4',
       collate: 'utf8mb4_unicode_ci',

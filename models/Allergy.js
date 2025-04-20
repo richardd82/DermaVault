@@ -4,13 +4,13 @@ const sequelize = require("./db");
 const Allergy = sequelize.define("Allergy", {
   id: { type: DataTypes.INTEGER.UNSIGNED, autoIncrement: true, primaryKey: true },
   medical_history_id: { type: DataTypes.INTEGER.UNSIGNED, allowNull: false },
-  analgesicos: DataTypes.STRING,
-  anestesicos: DataTypes.STRING,
-  antibioticos: DataTypes.STRING,
-  yodo: DataTypes.STRING,
-  adhesivos: DataTypes.STRING,
-  material_sutura: DataTypes.STRING,
-  otros: DataTypes.STRING
+  analgesicos: DataTypes.TEXT,
+  anestesicos: DataTypes.TEXT,
+  antibioticos: DataTypes.TEXT,
+  yodo: DataTypes.TEXT,
+  adhesivos: DataTypes.TEXT,
+  material_sutura: DataTypes.TEXT,
+  otros: DataTypes.TEXT
 }, {
   tableName: "allergies",
   timestamps: true,

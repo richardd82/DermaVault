@@ -10,7 +10,7 @@ const User = sequelize.define('User', {
     primaryKey: true
   },
   username: {
-    type: DataTypes.STRING(50),
+    type: DataTypes.STRING(100),
     allowNull: false,
     unique: true
   },
@@ -23,7 +23,7 @@ const User = sequelize.define('User', {
     }
   },
   password: {
-    type: DataTypes.STRING(255),
+    type: DataTypes.TEXT,
     allowNull: false
   },
   role: {
@@ -32,11 +32,11 @@ const User = sequelize.define('User', {
     defaultValue: 'assistant'
   },
   first_name: {
-    type: DataTypes.STRING(50),
+    type: DataTypes.TEXT,
     allowNull: true
   },
   last_name: {
-    type: DataTypes.STRING(50),
+    type: DataTypes.TEXT,
     allowNull: true
   },
   is_active: {
