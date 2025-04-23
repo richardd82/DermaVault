@@ -29,7 +29,7 @@ router.post("/generate", auth, async (req, res) => {
   dump.on("close", (code) => {
     if (code === 0) {
       const fileName = path.basename(backupPath); // ← asegúrate de tener esto definido
-      console.log("✅ Backup generado:", fileName);
+      // console.log("✅ Backup generado:", fileName);
   
       return res.json({
         success: true,
@@ -96,9 +96,9 @@ const upload = multer({
 
 /********************************* Ruta para restaurar backup ************************************/
 router.post("/restore", auth, upload.single("file"), async (req, res) => {
-  console.log("✅ Nombre:", req.file?.originalname);
-  console.log("📦 Tamaño:", req.file?.size);
-  console.log("🗂️ Path:", req.file?.path);
+  // console.log("✅ Nombre:", req.file?.originalname);
+  // console.log("📦 Tamaño:", req.file?.size);
+  // console.log("🗂️ Path:", req.file?.path);
 
   // if (process.env.NODE_ENV === "production") {
     try {
@@ -111,52 +111,6 @@ router.post("/restore", auth, upload.single("file"), async (req, res) => {
       console.error("❌ Error al restaurar:", err);
       return res.status(500).json({ success: false, message: "Error al restaurar respaldo" });
     }  
-  // }   else{
-
-
-  // if (!req.file) {
-  //   console.log("⚠️ No se recibió archivo");
-  //   return res
-  //     .status(400)
-  //     .json({ success: false, message: "No se recibió ningún archivo." });
-  // }
-
-  // console.log("📄 Archivo recibido:", req.file);
-
-  // const filePath = path.join(__dirname, "../backups", req.file?.filename);
-
-  // if (!req.file) {
-  //   return res
-  //     .status(400)
-  //     .json({ success: false, message: "No se recibió el archivo" });
-  // }
-
-  // const { exec } = require("child_process");
-
-  // const user = process.env.MYSQLUSER;
-  // const password = process.env.MYSQL_ROOT_PASSWORD;
-  // const database = process.env.MYSQL_DATABASE;
-  // const dumpFile = req.file.path.replace(/\\/g, "/");
-
-  // // const cmd = `mysql -u ${user} -p${password} ${database} < "${filePath}"`;
-  // const cmd = `mysql -u ${user} -p${password} ${database} --verbose < "${filePath}"`;
-
-  // console.log("🔁 Restaurando desde:", dumpFile);
-
-  // exec(cmd, { maxBuffer: 1024 * 1024 * 1024 }, (err, stdout, stderr) => {
-  //   if (err) {
-  //     console.error("Error al restaurar:", err);
-  //     return res.status(500).json({
-  //       success: false,
-  //       message: "Error al restaurar la base de datos",
-  //     });
-  //   }
-  //   // ✅ Eliminar archivo temporal
-  //   fs.unlinkSync(req.file.path);
-  //   console.log("🧹 Archivo temporal eliminado:", req.file.path);
-  //   return res.json({ success: true, message: "Restauración completada" });
-  // });
-// }
 });
 
 /********************************** Ruta para descargar backups ************************************/

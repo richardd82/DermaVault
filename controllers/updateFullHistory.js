@@ -9,7 +9,7 @@ const {
 } = require("../models");
 
 module.exports = async (req, res) => {
-  console.log("📩 PUT recibido en /histories/:id");
+  // console.log("📩 PUT recibido en /histories/:id");
 
     const { id } = req.params;
     const {
@@ -43,7 +43,7 @@ module.exports = async (req, res) => {
       if (Array.isArray(EvolutionDates)) {
         const historyId = parseInt(req.params.id); // Aseguramos que sea número
       
-        console.log("🧾 EvolutionDates recibidas:", EvolutionDates);
+        // console.log("🧾 EvolutionDates recibidas:", EvolutionDates);
       
         const existing = EvolutionDates.filter((e) => e.id); // Tienen ID, deben actualizarse
         const newOnes = EvolutionDates.filter(
@@ -55,7 +55,7 @@ module.exports = async (req, res) => {
         );
       
         // 🔄 Actualizar evoluciones existentes
-        console.log(existing, "existing evolutions");
+        // console.log(existing, "existing evolutions");
         for (const evo of existing) {
           const [affectedRows] = await EvolutionDate.update(
             {
@@ -70,7 +70,7 @@ module.exports = async (req, res) => {
             }
           );
       
-          console.log(`🔄 ID ${evo.id}: ${affectedRows} fila(s) actualizada(s)`);
+          // console.log(`🔄 ID ${evo.id}: ${affectedRows} fila(s) actualizada(s)`);
         }
       
         // ➕ Insertar nuevas evoluciones
@@ -80,7 +80,7 @@ module.exports = async (req, res) => {
             medical_history_id: historyId,
           }));
       
-          console.log("🚀 Insertando nuevas evoluciones:", formatted);
+          // console.log("🚀 Insertando nuevas evoluciones:", formatted);
       
           await EvolutionDate.bulkCreate(formatted);
         }
