@@ -22,6 +22,7 @@ const allowedOrigins = [
   "http://localhost:5173", // Desarrollo local
   "https://derma.richadd82.dev",  // Tu frontend en producción
   "http://192.168.100.77:5173", // Permitir cualquier origen (no recomendado para producción)
+  "http://192.168.100.77", // Permitir cualquier origen (no recomendado para producción)
   "http://192.168.100.53:5173" // Permitir cualquier origen (no recomendado para producción)
 ];
 
@@ -39,8 +40,12 @@ app.use(
     credentials: false, // Si usas cookies o auth headers
   })
 );
+app.use((req, res, next) => {
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  next();
+});
 app.use(morgan('dev'));
-app.use(express.json({ limit: '4096mb' }));
+app.use(express.json({ limit: '4096mb'}));
 app.use(express.urlencoded({ extended: true, limit: '4096mb' }));
 app.use('/api', routes);
 
