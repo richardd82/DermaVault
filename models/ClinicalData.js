@@ -1,31 +1,29 @@
-// models/ClinicalData.js
 const { DataTypes } = require("sequelize");
 const sequelize = require("./db");
-const MedicalHistory = require("./MedicalHistory");
 
-const ClinicalData = sequelize.define(
-  "ClinicalData",
-  {
-    id: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    medical_history_id: { type: DataTypes.INTEGER.UNSIGNED, allowNull: false },
-    question: { type: DataTypes.STRING(255), allowNull: false },
-    answer: { type: DataTypes.TEXT },
-  },
-  {
-    tableName: "clinical_data",
-    timestamps: true,
-  }
-);
+const ClinicalData = sequelize.define("ClinicalData", {
+  id: { type: DataTypes.INTEGER.UNSIGNED, autoIncrement: true, primaryKey: true },
+  medical_history_id: { type: DataTypes.INTEGER.UNSIGNED, allowNull: false },
+  padecimiento_actual: DataTypes.TEXT,
+  antecedentes_heredofamiliares: DataTypes.TEXT,
+  antecedentes_personales: DataTypes.TEXT,
+  resto_aparatos_sistemas: DataTypes.TEXT,
+  cicatrices_queloides: DataTypes.TEXT,
+  tension_arterial: DataTypes.TEXT,
+  sangrado_hematomas: DataTypes.TEXT,
+  ciclo_menstrual: DataTypes.TEXT,
+  tabaquismo: DataTypes.TEXT,
+  alcoholismo: DataTypes.TEXT,
+  problemas_emocionales: DataTypes.TEXT
+}, {
+  tableName: "clinical_data",
+  timestamps: true,
+});
 
-//Relations
 ClinicalData.associate = (models) => {
-  ClinicalData.belongsTo(MedicalHistory, {
+  ClinicalData.belongsTo(models.MedicalHistory, {
     foreignKey: "medical_history_id",
-    onDelete: "CASCADE",
+    onDelete: "CASCADE"
   });
 };
 
