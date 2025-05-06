@@ -18,13 +18,7 @@ const {
 } = require("./models");
 
 const routes = require('./routes');
-const allowedOrigins = [
-  "http://localhost:5173", // Desarrollo local
-  "https://derma.richadd82.dev",  // Tu frontend en producción
-  "http://192.168.100.77:5173", // Permitir cualquier origen (no recomendado para producción)
-  "http://192.168.100.77", // Permitir cualquier origen (no recomendado para producción)
-  "http://192.168.100.53:5173" // Permitir cualquier origen (no recomendado para producción)
-];
+const allowedOrigins = ["http://0.0.0.0", "http://192.168.1.1", "http://localhost:5173"];// Permitir cualquier origen dentro de la red
 
 const app = express();
 app.use(
