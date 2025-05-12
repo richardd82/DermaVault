@@ -2,30 +2,79 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
-const bodyParser = require('body-parser');
-const db = require('./models'); // Cargar modelos
+const path = require("path");
+
+const {
+  sequelize,
+  AdministrativeData,
+  Allergy,
+  ClinicalData,
+  Diagnosis,
+  EvolutionDate,
+  GeneralMedicalHistory,
+  MedicalHistory,
+  Patient,
+  User
+} = require("./models");
+
+const routes = require('./routes');
+const allowedOrigins = ["http://0.0.0.0", "http://192.168.1.1", "http://localhost:5173"];// Permitir cualquier origen dentro de la red
 
 const app = express();
-
-// Middlewares
-app.use(cors());
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // Permitir sin origin para herramientas como Thunder
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("CORS no permitido"));
+      }
+    },
+    credentials: false, // Si usas cookies o auth headers
+  })
+);
+app.use((req, res, next) => {
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  next();
+});
 app.use(morgan('dev'));
-app.use(bodyParser.json());
+app.use(express.json({ limit: '4096mb'}));
+app.use(express.urlencoded({ extended: true, limit: '4096mb' }));
+app.use('/api', routes);
 
-// Ruta de prueba
 app.get('/', (req, res) => {
-    res.send('DermaVault API Running 🚀');
+  res.send('DermaVault API Running 🚀');
 });
 
-// Sincronizar base de datos
-db.sequelize.sync().then(() => {
-    console.log("Database connected!");
-});
-
-// Iniciar el servidor
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-});
+const isDev = process.env.NODE_ENV !== "production";
 
-//Databse Created Successfully
+// ✅ Solo una vez y en el orden correcto
+async function safeSync() {
+  try {
+    await sequelize.authenticate();
+
+    // Sincronizar en orden respetando relaciones
+    await User.sync();
+    await Patient.sync();
+    await MedicalHistory.sync();
+    await ClinicalData.sync();
+    await Allergy.sync();
+    await Diagnosis.sync();
+    await EvolutionDate.sync();
+    await GeneralMedicalHistory.sync();
+    await AdministrativeData.sync();
+
+    await sequelize.sync({ alter: false }); // actualiza sin borrar datos
+    console.log("🛠️ Base de datos sincronizada con éxito");
+
+    app.listen(PORT, () => {
+      console.log(`🚀 Servidor en http://localhost:${PORT}`);
+    });
+  } catch (err) {
+    console.error("❌ Error al sincronizar la base de datos:", err);
+  }
+}
+
+safeSync();

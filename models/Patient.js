@@ -10,21 +10,25 @@ const Patient = sequelize.define(
       autoIncrement: true,
       primaryKey: true,
     },
-    cedula: { type: DataTypes.STRING(50), allowNull: false, unique: true },
-    apellido: { type: DataTypes.STRING(100), allowNull: false },
-    nombre: { type: DataTypes.STRING(100), allowNull: false },
-    fecha_nacimiento: { type: DataTypes.DATEONLY },
+    cedula: { type: DataTypes.STRING(100), allowNull: false, unique: true },
+    apellido: { type: DataTypes.TEXT, allowNull: false },
+    nombre: { type: DataTypes.TEXT, allowNull: false },
+    fecha_nacimiento: { type: DataTypes.DATEONLY, allowNull: true},
     edad: { type: DataTypes.INTEGER },
-    lugar_nacimiento: { type: DataTypes.STRING(100) },
-    sexo: { type: DataTypes.ENUM("M", "F") },
-    estado_civil: { type: DataTypes.STRING(50) },
-    profesion: { type: DataTypes.STRING(150) },
-    telefono_casa: { type: DataTypes.STRING(50) },
-    telefono_trabajo: { type: DataTypes.STRING(50) },
-    telefono_movil: { type: DataTypes.STRING(50) },
-    email: { type: DataTypes.STRING(150), validate: { isEmail: true } },
-    referido_por: { type: DataTypes.STRING(150) },
-    direccion: { type: DataTypes.STRING(255) },
+    lugar_nacimiento: { type: DataTypes.TEXT },
+    sexo: { type: DataTypes.ENUM("M", "F", "O") },
+    estado_civil: { type: DataTypes.TEXT },
+    profesion: { type: DataTypes.TEXT },
+    telefono_casa: { type: DataTypes.TEXT },
+    telefono_trabajo: { type: DataTypes.TEXT },
+    telefono_movil: { type: DataTypes.TEXT },
+    email: { type: DataTypes.TEXT, validate: { isEmail: true } },
+    referido_por: { type: DataTypes.TEXT },
+    direccion: { type: DataTypes.TEXT },
+    created_by: { 
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: true // O false si quieres forzar que siempre exista el usuario creador
+    }
   },
   {
     tableName: "patients",
@@ -41,6 +45,11 @@ Patient.associate = (models) => {
   Patient.hasOne(require("./AdministrativeData"), {
     foreignKey: "patient_id",
     onDelete: "CASCADE",
+  });
+  Patient.belongsTo(models.User, { 
+    foreignKey: 'created_by', 
+    as: 'creator',
+    onDelete: 'SET NULL'
   });
 };
 
