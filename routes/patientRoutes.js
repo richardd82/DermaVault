@@ -70,8 +70,10 @@ router.post("/patient", auth, async (req, res) => {
     const patient = await Patient.create(req.body);
     res.status(201).json(patient);
   } catch (error) {
-    console.error("Error al crear el paciente:", error);
-    res.status(500).json({ message: "Error al crear el paciente" });
+    if (error.name === 'SequelizeUniqueConstraintError') {
+      return res.status(400).json({ message: 'Cédula duplicada' });
+    }
+    return res.status(500).json({ message: 'Error interno del servidor' });
   }
 });
 
