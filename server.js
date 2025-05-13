@@ -18,7 +18,7 @@ const {
 } = require("./models");
 
 const routes = require('./routes');
-const allowedOrigins = ["http://0.0.0.0", "http://192.168.1.1", "http://localhost:5173"];// Permitir cualquier origen dentro de la red
+const allowedOrigins = ["http://0.0.0.0", "http://192.168.1.1", "http://localhost:5173", "https://dermavault.richadd82.dev|"];// Permitir cualquier origen dentro de la red
 
 const app = express();
 app.use(
