@@ -24,7 +24,11 @@ fs.readdirSync(__dirname)
   })
   .forEach((file) => {
     const model = require(path.join(__dirname, file));
-    db[model.name] = model;
+    const modelName = path.basename(file, ".js");
+    db[modelName] = model;
+
+    // const model = require(path.join(__dirname, file));
+    // db[model.name] = model;
   });
 // .forEach(file => {
 //   const model = require(path.join(__dirname, file));

@@ -2,6 +2,7 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("./db");
 
+
 const Patient = sequelize.define(
   "Patient",
   {
@@ -22,7 +23,7 @@ const Patient = sequelize.define(
     telefono_casa: { type: DataTypes.TEXT },
     telefono_trabajo: { type: DataTypes.TEXT },
     telefono_movil: { type: DataTypes.TEXT },
-    email: { type: DataTypes.TEXT, validate: { isEmail: true } },
+    email: { type: DataTypes.TEXT, allowNull: true },
     referido_por: { type: DataTypes.TEXT },
     direccion: { type: DataTypes.TEXT },
     created_by: { 

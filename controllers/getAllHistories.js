@@ -63,7 +63,7 @@ module.exports = async (req, res) => {
       include: [
         {
           model: Patient,
-          attributes: ["cedula", "nombre", "apellido", "email", "telefono_movil"],
+          attributes: ["cedula", "nombre", "apellido", "email", "telefono_movil", "profesion", "estado_civil", "sexo", "lugar_nacimiento"],
           where: patientWhere, // dinámico
         },
         { model: ClinicalData, as: "ClinicalData" },
